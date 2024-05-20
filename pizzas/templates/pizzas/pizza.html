@@ -1,0 +1,113 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <div class="row rounded-row pizza-info">
+        <div class="col-sm-12">
+            <div class="p-4 bg-white rounded-3 pizza-description shadow">
+                <div class="row">
+                    <div class="col-lg-8">
+                      <div class="row">
+                    <div class="col-sm-6"><h2>{{ pizza.title }}</h2></div>
+                    {% if request.user.pizzaiolo.username == pizza.owner.username %}
+                    <div class="col-sm-6">
+                        <div class="button-wrapper">
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-primary dark-green-btn" href="{% url 'update-pizza' pizza.id %}">Edit</a>
+                                <a class="btn btn-primary red-btn" href="{% url 'delete-pizza' pizza.id %}">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                      <p>{{ pizza.description|linebreaksbr }}</p>
+                      <div class="tag-area">
+                          {% for style in pizza.style.all  %}
+                          <a href="{% url 'pizzas' %}?search_query={{ style.name }}" class="btn btn-sm btn-outline-secondary tag-style">{{ style.name }}</a>
+                          {% endfor %}
+                          {% for flour in pizza.flour.all  %}
+                          <a href="{% url 'pizzas' %}?search_query={{ flour.name }}" class="btn btn-sm btn-outline-secondary tag-flour">{{ flour.name }}</a>
+                          {% endfor %}
+                      </div>
+                        <small>Created: {{ pizza.created_str }}</small>
+                        {% if pizza.was_edited %}
+                        <br><small>Last edited: {{ pizza.edited_str }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="bg-white rounded-3 p-4 p-md-5 pizzaiolo-info shadow">
+                            <h2>Pizzaiolo:</h2>
+                            <a href="{% url 'pizzaiolo' pizza.owner.id %}"><img src="{{ pizza.owner.profile_img.url }}" width="120px" height="120px" class="rounded-circle shadow"/></a>
+                            <hr>
+                            <h3><a href="{% url 'pizzaiolo' pizza.owner.id %}" class="link-dark">{{ pizza.owner.name }}</a></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="row rounded-row">
+    <div class="col-lg-12">
+
+            <img src="{{pizza.image.url}}" class="pizza-img shadow"/>
+
+    </div>
+</div>
+<div class="row rounded-row">
+    <div class="col-lg-12">
+        <div class="h-100 p-5 bg-white rounded-3 shadow">
+            <div class="add-comment">
+            <h2>Comments</h2>
+            <form action="#comments" method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    {{field}}
+                {% endfor %}
+                <br>
+                <input class="btn btn-primary dark-green-btn" type="submit" value="Submit"/>
+            </form>
+            </div>
+            {% if comments  %}
+            <hr>
+            <div class="comment-list overflow-auto" id="comments">
+                {% for comment in comments %}
+                {% if request.user.pizzaiolo == comment.owner %}
+                        <div class="row comment">
+                            <div class="col-sm-10 rounded-3 p-3 comment-field comment-owner">
+                                <p class="comment-date">{{ comment.created }}</p>
+                                {{ comment.body|linebreaksbr }}
+                                <br>
+                                {% if comment.was_edited %}
+                                <p class="comment-date">Last edited: {{ comment.edited }}</p>
+                                {% endif %}
+                                <a href="{% url 'update-comment' comment.id %}" class="edit-comment link-dark">EDIT</a>
+                                <a href="{% url 'delete-comment' comment.id %}" class="delete-comment link-dark">DELETE</a>
+                            </div>
+                            <div class="col-sm-2 user-photo">
+                                <a href="{% url 'pizzaiolo' comment.owner.id %}"><img src="{{ comment.owner.profile_img.url }}" width="60px" height="60px" class="rounded-circle shadow"/></a>
+                            </div>
+                        </div>
+                {% else %}
+                        <div class="row comment">
+                            <div class="col-sm-2 user-photo">
+                                <a href="{% url 'pizzaiolo' comment.owner.id %}"><img src="{{ comment.owner.profile_img.url }}" width="60px" height="60px" class="rounded-circle shadow"/></a>
+                            </div>
+                            <div class="col-sm-10 rounded-3 p-3 comment-field comment-not-owner">
+                                <p class="comment-date">{{ comment.created }}</p>
+                                {{ comment.body|linebreaksbr }}
+                                {% if comment.was_edited %}
+                                <p class="comment-date">Last edited: {{ comment.edited }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% endblock content %}

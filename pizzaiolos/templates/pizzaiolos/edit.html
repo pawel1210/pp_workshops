@@ -1,0 +1,46 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<form method="POST" action="{% url 'edit-pizzaiolo' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="bg-white rounded-3 pizzaiolo-info p-4 shadow">
+                    <img src="{{ pizzaiolo.profile_img.url }}" width="140px" height="140px" class="rounded-circle shadow"/>
+                    <br>
+                    {{ form.profile_img }}
+                    <hr>
+                    <br>
+                    <h1>{{ pizzaiolo.name }}</h1>
+                    <label>{{ form.location.label }}</label>
+                    <p>{{ form.location }}</p>
+                    <label>Instagram</label>
+                    <p>{{ form.social_instagram }}</p>
+                    <label>Facebook</label>
+                    <p>{{ form.social_facebook }}</p>
+
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="p-4 p-md-5 bg-white rounded-3 pizza-description shadow">
+                  <h2>Details:</h2>
+                    <label>{{ form.bio.label }}</label>
+                    <p>{{ form.bio }}</p>
+                    <label>{{ form.oven.label }}</label>
+                    <p>{{ form.oven }}</p>
+                    <label>{{ form.mixer.label }}</label>
+                    <p>{{ form.mixer }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row p-5">
+            <div class="btn-group px-5" role="group">
+                <input class="btn btn-primary dark-green-btn" type="submit" value="Save"/>
+                <a class="btn btn-primary red-btn" href="{% url 'account' %}">Back</a>
+            </div>
+        </div>
+    </div>
+
+</form>
+<!--{% endblock content %}-->

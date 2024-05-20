@@ -1,0 +1,43 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="row rounded-row inbox px-5">
+        {% for message in latest %}
+            {% if message.sender != request.user.pizzaiolo  %}
+                <a href="{% url 'conversation' message.sender.id %}#{{message.id}}" class="conversation-card link-dark">
+            {% else %}
+                <a href="{% url 'conversation' message.recipient.id %}#{{message.id}}" class="conversation-card link-dark">
+            {% endif %}
+        <div class="col-sm-12 p-2">
+            <div class="p-4 bg-white rounded-3 pizza-description shadow">
+                <div class="row">
+                    <div class="col-lg-2 text-center p-1">
+                        {% if message.sender != request.user.pizzaiolo  %}
+                            <img src="{{ message.sender.profile_img.url }}" width="60px" height="60px" class="rounded-circle shadow"/>
+                            <h6 class="m-0">{{ message.sender.name }}</h6>
+                        {% else %}
+                            <img src="{{ message.recipient.profile_img.url }}" width="60px" height="60px" class="rounded-circle shadow"/>
+                            <h6 class="m-0">{{ message.recipient.name }}</h6>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-10">
+                                <div class="outer">
+                                {% if message.is_read == False and message.sender != request.user.pizzaiolo %}
+                                    <p class="m-auto"><strong>{{ message.sender.first_name }}: {{ message.body|slice:"250" }}</strong></p>
+                                {% else %}
+                                    <p class="m-auto">{{ message.sender.first_name }}: {{ message.body|slice:"250" }}</p>
+                                {% endif %}
+                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock content %}

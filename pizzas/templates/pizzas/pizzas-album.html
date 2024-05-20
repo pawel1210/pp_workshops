@@ -1,0 +1,39 @@
+ <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% if pizzas %}
+        {% for pizza in pizzas %}
+        <div class="col">
+          <div class="card shadow-sm pizza-card">
+            <a href="{% url 'pizza' pizza.id %}" class="link-dark"><img class="card-img-top" width="100%" height="225" src="{{ pizza.image.url }}"/></a>
+            <div class="card-body">
+              <h3><a class="link-dark" href="{% url 'pizza' pizza.id %}">{{ pizza.title }}</a></h3>
+              <small>by:
+                <a class="link-dark" href="{% url 'pizzaiolo' pizza.owner.id %}">{{ pizza.owner.name }}</a></small>
+              <br>
+              <small>Created: {{ pizza.created_str }}</small>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="tag-area">
+                  {% for style in pizza.style.all  %}
+                  <a href="{% url 'pizzas' %}?search_query={{ style.name }}" class="btn btn-sm btn-outline-secondary tag-style">{{ style.name }}</a>
+                  {% endfor %}
+                  {% for flour in pizza.flour.all  %}
+                  <a href="{% url 'pizzas' %}?search_query={{ flour.name }}" class="btn btn-sm btn-outline-secondary tag-flour">{{ flour.name }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="p-4 p-md-5 rounded-3 shadow bg-white w-100 text-center">
+          <h3>Sorry, no pizzas found :(</h3>
+          <br>
+          <a class="link-dark" href="{% url 'pizzas' %}"><small class="tag-style p-1">Show All</small></a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>

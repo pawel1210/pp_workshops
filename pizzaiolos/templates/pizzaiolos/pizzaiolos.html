@@ -1,0 +1,60 @@
+{% extends 'main.html' %}
+{% block content %}
+{% include 'form_styling.html' %}
+<main>
+  <div class="album pb-5 pt-4">
+    <div class="container">
+        <div>
+            <form method="GET" action="">
+              <div class="row bg-white shadow-sm p-3 rounded-3 m-0 w-100">
+                      {% for field in myFilter.form  %}
+                      <div class="col-md-4 text-center">
+                              <label>
+                                  {{field.label}}
+                              </label>
+                              <br>
+                              {{field}}
+                      </div>
+                      {% endfor %}
+                      <div class="text-center mt-3">
+                          <input type="submit" value="Filter" class="btn back-btn"/>
+                      </div>
+                  {% if show_all %}
+                <a class="link-dark" href="{% url 'pizzaiolos' %}"><small class="tag-style p-1"> X Clear Filter</small></a>
+                  {% endif %}
+              </div>
+            </form>
+        </div>
+        <br>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% for pizzaiolo in pizzaiolos %}
+        <div class="col">
+          <div class="card shadow-sm bg-white card-100">
+            <div class="pizzaiolo-card">
+                <a href="{% url 'pizzaiolo' pizzaiolo.id %}"><img src="{{ pizzaiolo.profile_img.url }}" width="140px" height="140px" class="rounded-circle shadow"/></a>
+                <br>
+                <br>
+                {% if request.user.pizzaiolo.username == pizzaiolo.username %}
+                <h3><a href="{% url 'pizzaiolo' pizzaiolo.id %}" class="link-dark"><strong>{{ pizzaiolo.name }}</strong></a></h3>
+                <p>{{ pizzaiolo.location }}</p>
+                <small>Pizzas: {{ pizzaiolo.pizzas_amount }}</small><br><br>
+                <a class="btn btn-primary dark-green-btn" href="{% url 'account' %}">My Account</a>
+                {% else %}
+                <h3><a href="{% url 'pizzaiolo' pizzaiolo.id %}" class="link-dark">{{ pizzaiolo.name }}</a></h3>
+                <p>{{ pizzaiolo.location }}</p>
+                <small>Pizzas: {{ pizzaiolo.pizzas_amount }}</small><br><br>
+                <a class="btn btn-primary dark-green-btn" href="{% url 'conversation' pizzaiolo.id %}#latest-message">Send a Message</a>
+                {% endif %}
+
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+{% endblock content %}

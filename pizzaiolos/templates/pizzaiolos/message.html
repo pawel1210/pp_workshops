@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+<div class="row rounded-row">
+    <div class="col-lg-12">
+        <div class="h-100 p-5 bg-white rounded-3 shadow">
+            <a href="{% url 'inbox' %}" class="btn back-btn">< Inbox</a><a href="{% url 'pizzaiolo' sender.id %}" class="link-dark"> <img src="{{ sender.profile_img.url }}" width="30px" height="30px" class="rounded-circle shadow"/> {{ sender.name }}</a>
+            <div class="comment-list overflow-auto" id="comments">
+                {% if conversation %}
+                    {% for message in conversation %}
+                        {% if message.sender != request.user.pizzaiolo  %}
+                                <div class="row comment" id="{{ message.id }}">
+                                    <div class="col-sm-2 user-photo">
+                                        <a href="{% url 'pizzaiolo' message.sender.id %}"><img src="{{ message.sender.profile_img.url }}" width="50px" height="50px" class="rounded-circle shadow"/></a>
+                                    </div>
+                                    <div class="col-sm-10 rounded-3 p-3 comment-field comment-not-owner">
+                                        <p class="comment-date">{{ message.created }}</p>
+                                        {{ message.body|linebreaksbr }}
+                                    </div>
+                                </div>
+                        {% else %}
+                                <div class="row comment" id="{{ message.id }}">
+                                    <div class="col-sm-10 rounded-3 p-3 comment-field comment-owner">
+                                        <p class="comment-date">{{ message.created }}</p>
+                                        {{ message.body|linebreaksbr }}
+                                    </div>
+                                    <div class="col-sm-2 user-photo">
+                                        <a href="{% url 'pizzaiolo' message.sender.id %}"><img src="{{ message.sender.profile_img.url }}" width="50px" height="50px" class="rounded-circle shadow"/></a>
+                                    </div>
+                                </div>
+                        {% endif %}
+                    {% endfor %}
+                <div id="latest-message"></div>
+                {% else %}
+                <em>No messages with {{ sender.first_name }} yet</em>
+                {% endif %}
+            </div>
+            <hr>
+            <div class="add-comment" id="send-message">
+            <form action="#{{ latest }}" method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    {{ field }}
+                {% endfor %}
+                <br>
+                <input class="btn btn-primary dark-green-btn" type="submit" value="Send"/>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="p-4 p-md-5 rounded-3 bg-white">
+    <h1>Are you sure you want to delete {{pizza.title}}?</h1>
+<form method="POST" action="{% url 'delete-pizza' pizza.id %}">
+  {% csrf_token %}
+  <div class="btn-group">
+    <a href="{% url 'pizza' pizza.id %}" class="btn btn-primary dark-green-btn">Back</a>
+    <input class="btn btn-primary red-btn" type="submit" value="Delete"/>
+  </div>
+</form>
+</div>
+{% endblock content %}

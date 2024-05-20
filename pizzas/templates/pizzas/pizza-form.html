@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="p-4 p-md-5 rounded-3 shadow bg-white">
+    {% if action == "add" %}
+    <h1>Add a new pizza</h1>
+    {% else %}
+    <h1>Update a pizza</h1>
+    {% endif %}
+
+<form method="POST" enctype="multipart/form-data" >
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="mb-3">
+    <label class="form-label">{{ field.label }}</label>
+    <br>
+    {{ field }}
+  </div>
+  {% endfor %}
+  <br>
+  <div class="btn-group" role="group">
+    <input class="btn btn-primary dark-green-btn" type="submit" value="Save"/>
+    <a class="btn btn-primary red-btn" href="{{request.META.HTTP_REFERER}}">Back</a>
+  </div>
+</form>
+</div>
+{% endblock content %}

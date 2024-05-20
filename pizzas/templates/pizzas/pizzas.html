@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+{% block content %}
+<main>
+  {% if request.user.is_authenticated %}
+    {% include 'pizzas/pizzas-album.html' %}
+  {% else %}
+    {% include 'login.html' %}
+    {% include 'pizzas/pizzas-album.html' %}
+  {% endif %}
+</main>
+
+{% endblock content %}
