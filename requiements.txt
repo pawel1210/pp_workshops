@@ -20,3 +20,4 @@ sqlparse==0.4.3
 unicode==2.8
 Unidecode==1.3.4
 urllib3==1.26.9
+appdynamics==24.2.0.6567
